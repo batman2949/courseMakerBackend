@@ -3,10 +3,22 @@ const cors = require("cors");
 const app = express();
 require("dotenv").config();
 
+const allowedOrigins = [
+    "http://localhost:3000",              // local dev
+    "https://course-maker-mu.vercel.app"  // your deployed frontend
+];
+
 app.use(cors({
-     origin: ["http://localhost:3000", "https://j6htdvmr-3000.inc1.devtunnels.ms",  process.env.FRONTEND_URL],
+    origin: function(origin, callback) {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error("Not allowed by CORS"));
+        }
+    },
     credentials: true
 }));
+
 
 app.use(express.json());
 
